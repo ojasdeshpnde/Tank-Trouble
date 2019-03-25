@@ -84,7 +84,7 @@ public class Map extends JPanel{
 	Tank_actual t = new Tank_actual(200,200);
 	public BufferedImage tank;
 	
-	public static int port = 8;
+	public static int port = 1;
 	static Socket socket;
 	
 	static DataOutputStream dos;
