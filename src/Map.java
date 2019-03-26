@@ -1,7 +1,6 @@
 import javax.imageio.ImageIO;
 import javax.imageio.stream.ImageInputStream;
 import javax.swing.*;
-
 import java.awt.*;
 import java.awt.Frame;
 import java.awt.Graphics;
@@ -82,20 +81,29 @@ public class Map extends JPanel{
 	};
 	BulletReal b = new BulletReal(.5,.5,400,220,System.currentTimeMillis());
 	Tank_actual t = new Tank_actual(200,200);
-	public BufferedImage tank;
 	
-	public static int port = 1;
+	public static int port = 4;
 	static Socket socket;
 	
+	public static ArrayList<Tank_actual> tanks;
+	public static ArrayList<BufferedImage> images;
+	public int nOfClients = 4;
+	
 	static DataOutputStream dos;
+	
+	boolean init = true;
 	
 	
 	Map() throws IOException
 	{
 		setFocusable(true);	
-
-		tank = ImageIO.read(new File("photo_2019-03-24_13-51-16.jpg"));
-
+		
+		images = new ArrayList<BufferedImage>();
+		for(int i = 0; i < nOfClients; i++)
+		{
+			BufferedImage k = ImageIO.read(new File("photo_2019-03-24_13-51-16.jpg"));
+			images.add(k);
+		}
 		addKeyListener(new KeyListener()
 		{
 
@@ -103,7 +111,7 @@ public class Map extends JPanel{
 			public void keyPressed(KeyEvent e) {
 				if(e.getKeyChar()=='w') {
 					try {
-						send("W");
+						send(port + ",w");
 					} catch (IOException e1) {
 						e1.printStackTrace();
 					}
@@ -111,7 +119,7 @@ public class Map extends JPanel{
 				if(e.getKeyChar()=='a') {
 					
 					try {
-						send("a");
+						send(port + ",a");
 					} catch (IOException e1) {
 						e1.printStackTrace();
 					}
@@ -119,7 +127,7 @@ public class Map extends JPanel{
 				if(e.getKeyChar()=='s') {
 					
 					try {
-						send("s");
+						send(port + ",s");
 					} catch (IOException e1) {
 						e1.printStackTrace();
 					}
@@ -127,7 +135,7 @@ public class Map extends JPanel{
 				if(e.getKeyChar()=='d') {
 					
 					try {
-						send("d");
+						send(port + ",d");
 					} catch (IOException e1) {
 						e1.printStackTrace();
 					}
@@ -194,7 +202,9 @@ public class Map extends JPanel{
 			System.out.println(s);
 		}
 		*/
+		tanks = new ArrayList<Tank_actual>();
 		connect();
+		repaint();
 	}
 	
 	
@@ -221,15 +231,37 @@ public class Map extends JPanel{
 					try {
 						dis = new DataInputStream(socket.getInputStream());
 						String str = dis.readUTF();
-						System.out.println(str);
-						if(str.equals("W"))
-							t.move(5);
-						else if(str.equals("a"))
-							t.changeAngle(-4);
-						else if(str.equals("d"))
-							t.changeAngle(4);
-						else if(str.equals("s"))
-							t.move(-5);
+						String[] ar = str.split(",");
+						
+						if(ar[0].equals("P"))
+						{
+							double x = Double.parseDouble(ar[1]);
+							double y = Double.parseDouble(ar[2]);
+							Tank_actual temp = new Tank_actual(x,y);
+							tanks.add(temp);
+						}
+						else
+						{
+							System.out.println(str);
+							int p = Integer.parseInt(ar[0]);
+							double a = Double.parseDouble(ar[1]);
+							double x = Double.parseDouble(ar[2]);
+							double y = Double.parseDouble(ar[3]);
+							tanks.get(p-1).changeX(x-tanks.get(p-1).getX());
+							tanks.get(p-1).changeY(y-tanks.get(p-1).getY());
+							tanks.get(p-1).changeAngle(a-tanks.get(p-1).getAngle());
+						}
+						
+//						System.out.println(str);
+//						if(str.equals("w"))
+//							t.move(5);
+//						else if(str.equals("a"))
+//							t.changeAngle(-4);
+//						else if(str.equals("d"))
+//							t.changeAngle(4);
+//						else if(str.equals("s"))
+//							t.move(-5);
+						repaint();
 							
 					} catch (IOException e) {
 						e.printStackTrace();
@@ -296,16 +328,19 @@ public class Map extends JPanel{
 				}
 			}
 		}
-		
-		g.fillOval((int)b.getxpos(), (int)b.getypos(), 15, 15);
-		double rotationRequired = Math.toRadians(t.getAngle());
-		double locationX = 25;
-		double locationY = 25;
-		AffineTransform tx = AffineTransform.getRotateInstance(rotationRequired, locationX, locationY);
-		AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
-		g.drawImage(op.filter(tank, null), (int)t.getX(), (int)t.getY(), null);
-		if(System.currentTimeMillis()>b.time+10000) {
-			b.delete();
+		for(int i = 0; i < nOfClients; i++)
+		{
+			g.fillOval((int)b.getxpos(), (int)b.getypos(), 15, 15);
+			double rotationRequired = Math.toRadians(tanks.get(i).getAngle());
+			double locationX = 25;
+			double locationY = 25;
+			AffineTransform tx = AffineTransform.getRotateInstance(rotationRequired, locationX, locationY);
+			AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
+			g.drawImage(op.filter(images.get(i), null), (int)tanks.get(i).getX(), (int)tanks.get(i).getY(), null);
+			if(System.currentTimeMillis()>b.time+10000)
+			{
+				b.delete();
+			}
 		}
 		
 	}

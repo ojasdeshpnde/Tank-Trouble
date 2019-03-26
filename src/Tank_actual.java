@@ -29,18 +29,19 @@ public class Tank_actual
 //	{
 	//	return gun;
 	//}
-	public void changeX(int d)
+	public void changeX(double d)
 	{
 		x += d;
 	}
-	public void changeY(int d)
+	public void changeY(double d)
 	{
 		y += d;
 	}
-	public void changeAngle(int d)
+	public void changeAngle(double d)
 	{
 		angle += d;
 	}
+	
 	public void move(double d)
 	{
 		y+=d*Math.sin(Math.toRadians(angle));

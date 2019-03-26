@@ -14,6 +14,8 @@ public class Server extends JFrame
 	
 	public static int nOfClients = 4;
 	
+	public static ArrayList<Tank_actual> tanks;
+	
 	public static ArrayList<Integer> ports;
 	public static ArrayList<Socket> sc;
 	public static ArrayList<ServerSocket> s;
@@ -37,7 +39,9 @@ public class Server extends JFrame
 			}
 			sc = new ArrayList<Socket>();
 			s = new ArrayList<ServerSocket>();
+			tanks = new ArrayList<Tank_actual>();
 			connect();
+			createTanks();
 	}
 	
 	public void connect() throws IOException
@@ -66,7 +70,9 @@ public class Server extends JFrame
 				try {
 					dis = new DataInputStream(sc.get(i).getInputStream());
 					String str = dis.readUTF();
-					send(str);
+					String[] arr = str.split(",");
+					int pNum = Integer.parseInt(arr[0]);
+					updatePosition(pNum, arr[1]);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -92,6 +98,56 @@ public class Server extends JFrame
 	public static void main(String[] args) throws Exception
 	{
 		new Server();
+	}
+	
+	public static void createTanks() throws IOException
+	{
+		for(int i = 0; i < nOfClients; i++)
+		{
+			Tank_actual tank = new Tank_actual(randomX(), randomY());
+			tanks.add(tank);
+			send("P," + tanks.get(i).getX() + "," + tanks.get(i).getY());
+		}
+		return;
+		
+	}
+	
+	public static int randomX()
+	{
+		int x = (int) (Math.random() * 1000);
+		return x;
+	}
+	
+	public static int randomY()
+	{
+		int y = (int) (Math.random() * 1000);
+		return y;
+	}
+	
+	public static void updatePosition(int pNum, String m)throws IOException
+	{
+		if(m.equals("w")){
+			System.out.println(tanks.get(pNum-1).getX() + "," + tanks.get(pNum-1).getY());
+			tanks.get(pNum-1).move(5);
+			System.out.println(tanks.get(pNum-1).getX() + "," + tanks.get(pNum-1).getY());
+		}
+		else if(m.equals("a")){
+			System.out.println(tanks.get(pNum-1).getAngle());
+			tanks.get(pNum-1).changeAngle(-4);
+			System.out.println(tanks.get(pNum-1).getAngle());
+		}
+		else if(m.equals("d")){
+			System.out.println(tanks.get(pNum-1).getAngle());
+			tanks.get(pNum-1).changeAngle(4);
+			System.out.println(tanks.get(pNum-1).getAngle());
+		}
+		else if(m.equals("s")){
+			System.out.println(tanks.get(pNum-1).getX() + "," + tanks.get(pNum-1).getY());
+			tanks.get(pNum-1).move(-5);
+			System.out.println(tanks.get(pNum-1).getX() + "," + tanks.get(pNum-1).getY());
+		}
+		send(pNum + "," + tanks.get(pNum-1).getAngle() + "," + tanks.get(pNum-1).getX() + "," + tanks.get(pNum-1).getY());
+		return;
 	}
 
 	
