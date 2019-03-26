@@ -82,7 +82,7 @@ public class Map extends JPanel{
 	BulletReal b = new BulletReal(.5,.5,400,220,System.currentTimeMillis());
 	Tank_actual t = new Tank_actual(200,200);
 	
-	public static int port = 1;
+	public static int port = 4;
 	static Socket socket;
 	
 	public static ArrayList<Tank_actual> tanks;
@@ -101,8 +101,33 @@ public class Map extends JPanel{
 		images = new ArrayList<BufferedImage>();
 		for(int i = 0; i < nOfClients; i++)
 		{
-			BufferedImage k = ImageIO.read(new File("photo_2019-03-24_13-51-16.jpg"));
-			images.add(k);
+			if(i+1==1)
+			{
+				BufferedImage k = ImageIO.read(new File("t1.jpg"));
+				images.add(k);
+			}
+			else if(i+1 == 2)
+			{
+				BufferedImage k = ImageIO.read(new File("t2.jpg"));
+				images.add(k);
+			}
+			else if(i+1 == 3)
+			{
+				BufferedImage k = ImageIO.read(new File("t3.jpg"));
+				images.add(k);
+			}
+			else if(i+1 == 4)
+			{
+				BufferedImage k = ImageIO.read(new File("t4.jpg"));
+				images.add(k);
+			}
+			else
+			{
+				BufferedImage k = ImageIO.read(new File("t1.jpg"));
+				images.add(k);
+			}
+			
+				
 		}
 		addKeyListener(new KeyListener()
 		{
