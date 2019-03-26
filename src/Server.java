@@ -127,24 +127,16 @@ public class Server extends JFrame
 	public static void updatePosition(int pNum, String m)throws IOException
 	{
 		if(m.equals("w")){
-			System.out.println(tanks.get(pNum-1).getX() + "," + tanks.get(pNum-1).getY());
 			tanks.get(pNum-1).move(5);
-			System.out.println(tanks.get(pNum-1).getX() + "," + tanks.get(pNum-1).getY());
 		}
 		else if(m.equals("a")){
-			System.out.println(tanks.get(pNum-1).getAngle());
 			tanks.get(pNum-1).changeAngle(-4);
-			System.out.println(tanks.get(pNum-1).getAngle());
 		}
 		else if(m.equals("d")){
-			System.out.println(tanks.get(pNum-1).getAngle());
 			tanks.get(pNum-1).changeAngle(4);
-			System.out.println(tanks.get(pNum-1).getAngle());
 		}
 		else if(m.equals("s")){
-			System.out.println(tanks.get(pNum-1).getX() + "," + tanks.get(pNum-1).getY());
 			tanks.get(pNum-1).move(-5);
-			System.out.println(tanks.get(pNum-1).getX() + "," + tanks.get(pNum-1).getY());
 		}
 		send(pNum + "," + tanks.get(pNum-1).getAngle() + "," + tanks.get(pNum-1).getX() + "," + tanks.get(pNum-1).getY());
 		return;

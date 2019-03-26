@@ -82,7 +82,7 @@ public class Map extends JPanel{
 	BulletReal b = new BulletReal(.5,.5,400,220,System.currentTimeMillis());
 	Tank_actual t = new Tank_actual(200,200);
 	
-	public static int port = 4;
+	public static int port = 1;
 	static Socket socket;
 	
 	public static ArrayList<Tank_actual> tanks;
