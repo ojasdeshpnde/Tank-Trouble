@@ -82,12 +82,12 @@ public class Map extends JPanel{
 	BulletReal b = new BulletReal(.5,.5,400,220,System.currentTimeMillis());
 	Tank_actual t = new Tank_actual(200,200);
 	
-	public static int port = 4;
+	public static int port = 2;
 	static Socket socket;
 	
 	public static ArrayList<Tank_actual> tanks;
 	public static ArrayList<BufferedImage> images;
-	public int nOfClients = 4;
+	public int nOfClients = 2;
 	
 	static DataOutputStream dos;
 	
@@ -97,7 +97,6 @@ public class Map extends JPanel{
 	Map() throws IOException
 	{
 		setFocusable(true);	
-		
 		images = new ArrayList<BufferedImage>();
 		for(int i = 0; i < nOfClients; i++)
 		{
@@ -311,6 +310,7 @@ public class Map extends JPanel{
 		for(int i = 0;i<vertical.length;i++) {
 			for(int j = 0;j<vertical[0].length;j++) {
 				if(vertical[i][j]) {
+					g.setColor(Color.MAGENTA);
 					g.drawLine((i*100)+100, (j*100)+100, (i*100)+100, j*100);
 				}
 				
@@ -319,10 +319,12 @@ public class Map extends JPanel{
 		for(int i = 0;i<horizontal.length;i++) {
 			for(int j = 0;j<horizontal[0].length;j++) {
 				if(horizontal[i][j]) {
+					g.setColor(Color.red);
 					g.drawLine((i*100)+100, (j*100)+100, i*100, (j*100)+100);
 				}
 			}
 		}
+
 		g.drawRect(0, 0, 1900, 1000);
 		b.setxpos(b.getxpos()+b.getvx());
 		b.setypos(b.getypos()+b.getvy());

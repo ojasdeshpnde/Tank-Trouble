@@ -12,7 +12,7 @@ public class Server extends JFrame
 	public JFrame frame;
 	public JPanel panel;
 	
-	public static int nOfClients = 4;
+	public static int nOfClients = 2;
 	
 	public static ArrayList<Tank_actual> tanks;
 	
